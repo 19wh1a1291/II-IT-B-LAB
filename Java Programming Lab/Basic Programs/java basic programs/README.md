@@ -1,7 +1,7 @@
 1.	JAVA BASIC PROGRAMS
-a) Java Program to Add two Numbers
-b) Java Program to Check Even or Odd Number
-c) Java Program to add two binary numbers
+a)  Java Program to Add two Numbers
+b)  Java Program to Check Even or Odd Number
+c)  Java Program to add two binary numbers
 d)	Java Program to add two complex numbers
 e)	Java Program to Multiply two Numbers
 f)	Java Program to check Leap Year
