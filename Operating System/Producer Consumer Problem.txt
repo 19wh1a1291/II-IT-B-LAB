@@ -1,0 +1,95 @@
+Aim:
+To write a  C Program for the Implementation of Producer Consumer Problem.
+
+Algorithm:
+     Semaphore fullBuffers("full",0) // initially, no messages
+      Semaphore emptyBuffers("empty", BUFF_SIZE); // the size of the round buffer                                                           
+      Semaphore mutex("ring",1);         // no one accesses the ring buffer
+     
+      Producer() {
+        emptyBuffers.P();                                  // check if there's slot for more messages
+         
+        mutex.P();                                               // make sure no one else is accessing the ring buffer
+         
+        put one message in the ring buffer
+
+        mutex.V();                                              // ok for others to use the ring buffer
+
+        fullBuffers.V();                                      // tell consumers there's a new message in the ring buffer
+      }                  
+
+      Consumer() {
+        fullBuffers.P();                                       // check if there's a message in the ring buffer
+
+        mutex.P();                                               // make sure no one else is accessing the ring buffer
+     
+        take one message out
+
+        mutex.V();                                               // others' turn to use the ring buffer
+                        
+        emptyBuffers.V();                                  // tell producer  more messages are needed
+       }
+
+Program:
+
+#include<stdio.h>
+int mutex=1,full=0,empty=3,x=0;
+main()
+{
+   int n;
+   void producer();
+   void consumer();
+   int wait(int);
+   int signal(int);
+   printf(“\n 1.Producer  \n 2.Consumer \n 3.Exit”);
+   while(1)
+   {
+      printf(“\n Enter your choice:”);
+      scanf(“%d”,&n);
+      switch(n)
+      {
+         case 1:
+                 if((mutex==1)&&(empty!=0))
+                    producer();
+                 else
+                    printf(“Buffer is full”);
+     break;
+         case 2:
+             if((mutex==1)&&(full!=0))
+    consumer();
+    else
+        printf(“Buffer is empty”);
+       break;
+         case 3:
+    exit(0);
+    break;
+      }
+   }
+}
+int wait(int s)
+{
+   return (--s);
+}
+int signal(int s)
+{
+   return(++s);
+}
+void producer()
+{
+   mutex=wait(mutex);
+   full=signal(full);
+   empty=wait(empty);
+   x++;
+   printf(“\n Producer produces the item %d”,x);
+   mutex=signal(mutex);
+}
+void consumer()
+{
+   mutex=wait(mutex);
+   full=wait(full);
+   empty=signal(empty);
+   printf(“\n Consumer consumes item %d”,x);
+   x--;
+   mutex=signal(mutex);
+}
+
